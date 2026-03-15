@@ -1,6 +1,6 @@
 {
   "name": "toll-booth-announce",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Bridge between @thecryptodonkey/toll-booth and 402-announce — announce your toll-booth service on Nostr for decentralised paid API discovery",
   "type": "module",
   "main": "./build/index.js",
