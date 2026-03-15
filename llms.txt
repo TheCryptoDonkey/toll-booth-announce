@@ -1,0 +1,33 @@
+# toll-booth-announce
+
+> Bridge between toll-booth (L402 middleware) and 402-announce (Nostr service discovery)
+
+toll-booth-announce maps your toll-booth configuration to a kind 31402 Nostr event,
+automatically announcing your paid API for decentralised discovery.
+
+## When to Use
+
+Use toll-booth-announce when you have a toll-booth-powered API and want AI agents
+and clients to discover it on Nostr relays.
+
+## Install
+
+npm install toll-booth-announce
+
+## Quick Start
+
+import { announce } from 'toll-booth-announce'
+const handle = await announce(boothConfig, { secretKey, relays, url, about })
+
+## Auto-Derived Fields
+
+- name: from serviceName or 'Toll Booth Service'
+- identifier: slugified from name
+- pricing: extracted from booth pricing config
+- paymentMethods: from backend (Lightning) and xcashu config
+
+## Related
+
+- toll-booth: L402/xcashu payment middleware
+- 402-announce: Low-level Nostr announcement library
+- 402-mcp: MCP server for AI agent discovery and payment

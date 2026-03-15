@@ -1,0 +1,88 @@
+# toll-booth-announce — Full Reference
+
+> Bridge between toll-booth (L402 middleware) and 402-announce (Nostr service discovery)
+
+## API
+
+### announce(boothConfig, options)
+
+Maps a toll-booth config to a kind 31402 Nostr event and publishes it.
+
+Parameters:
+- boothConfig: BoothConfigLike — your toll-booth pricing config
+- options: TollBoothAnnounceOptions — Nostr publishing options
+
+Returns: Promise<Announcement> — handle with eventId, pubkey, close()
+
+### BoothConfigLike
+
+interface BoothConfigLike {
+  pricing: Record<string, number | PriceInfo | Record<string, number | PriceInfo>>
+  serviceName?: string
+  hasBackend?: boolean
+  xcashu?: { mints: string[] }
+}
+
+### TollBoothAnnounceOptions
+
+interface TollBoothAnnounceOptions {
+  secretKey: string       // 64-char hex Nostr secret key
+  relays: string[]        // wss:// relay URLs
+  url: string             // HTTP endpoint URL
+  about: string           // Service description
+  paymentMethods?: string[] // Override auto-derived methods
+  identifier?: string     // Override auto-derived d-tag
+  picture?: string        // Icon URL
+  topics?: string[]       // Filtering tags
+  version?: string        // Service version
+}
+
+## Pricing Mapping
+
+toll-booth-announce extracts pricing from three formats:
+
+1. Flat number: { '/api': 10 } → { capability: '/api', price: 10, currency: 'sats' }
+2. PriceInfo: { '/api': { sats: 10, usd: 1 } } → prefers sats
+3. Tiered: { '/api': { default: 10, premium: 50 } } → uses default tier
+
+## Payment Method Auto-Derivation
+
+When paymentMethods is not provided:
+- hasBackend: true → includes 'bitcoin-lightning-bolt11'
+- xcashu configured → includes 'bitcoin-cashu-xcashu'
+- User-provided paymentMethods override all auto-derivation
+
+## Example
+
+import { announce } from 'toll-booth-announce'
+
+const handle = await announce(
+  {
+    pricing: { '/api/joke': 1, '/api/roast': 5 },
+    serviceName: 'Jokes API',
+    hasBackend: true,
+    xcashu: { mints: ['https://mint.minibits.cash'] },
+  },
+  {
+    secretKey: process.env.NOSTR_SECRET_KEY!,
+    relays: ['wss://relay.damus.io', 'wss://relay.primal.net'],
+    url: 'https://jokes.trotters.dev',
+    about: 'A joke-telling API behind an L402 paywall',
+    topics: ['comedy', 'ai'],
+  },
+)
+
+// Auto-derived: paymentMethods = ['bitcoin-lightning-bolt11', 'bitcoin-cashu-xcashu']
+console.log('Announced:', handle.eventId)
+handle.close()
+
+## Dependencies
+
+- 402-announce (runtime) — Nostr event building and publishing
+- @thecryptodonkey/toll-booth (peer) — toll-booth types
+
+## Related
+
+- toll-booth: L402/xcashu payment middleware (npm: @thecryptodonkey/toll-booth)
+- 402-announce: Low-level Nostr announcement library (npm: 402-announce)
+- 402-mcp: MCP server for AI agent discovery and payment
