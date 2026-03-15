@@ -14,14 +14,18 @@ npm install toll-booth-announce 402-announce
 
 ```typescript
 import { Booth } from '@thecryptodonkey/toll-booth'
+import { phoenixdBackend } from '@thecryptodonkey/toll-booth/backends/phoenixd'
 import { announce } from 'toll-booth-announce'
 
 // Your existing toll-booth config
 const config = {
-  serviceName: 'Valhalla Routing',
-  pricing: { '/route': 2, '/isochrone': 5, '/matrix': 10 },
+  serviceName: 'sats-for-laughs',
+  pricing: {
+    '/api/joke': { default: 5, standard: 21, premium: 42 },
+  },
   upstream: 'http://localhost:4444',
   backend: phoenixdBackend({ /* ... */ }),
+  freeTier: { requestsPerDay: 3 },
 }
 
 const booth = new Booth(config)
@@ -30,10 +34,10 @@ const booth = new Booth(config)
 const announcement = await announce(config, {
   secretKey: process.env.NOSTR_SK,
   relays: ['wss://relay.damus.io', 'wss://relay.primal.net'],
-  url: 'https://routing.trotters.cc',
-  about: 'Production routing engine for the UK',
+  url: 'https://jokes.trotters.dev',
+  about: 'Lightning-paid joke API — cracker, standard, and premium jokes',
   paymentMethods: ['bitcoin-lightning-bolt11'],
-  topics: ['routing', 'geospatial', 'navigation'],
+  topics: ['jokes', 'humour', 'bitcoin', 'lightning'],
 })
 
 console.log(`Announced as ${announcement.pubkey} (event ${announcement.eventId})`)
