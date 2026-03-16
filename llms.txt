@@ -20,11 +20,11 @@ npm install toll-booth-announce
 ## Quick Start
 
 import { announce } from 'toll-booth-announce'
-const handle = await announce(boothConfig, { secretKey, relays, url, about })
+const handle = await announce(boothConfig, { secretKey, relays, urls, about })
 
 ## Auto-Derived Fields
 
-- name: from serviceName or 'Toll Booth Service'
+- name: from serviceName or 'toll-booth'
 - identifier: slugified from name
 - pricing: extracted from booth pricing config
 - paymentMethods: from backend (Lightning) and xcashu config

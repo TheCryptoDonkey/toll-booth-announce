@@ -26,7 +26,12 @@
     "discovery",
     "toll-booth",
     "402",
-    "paid-api"
+    "paid-api",
+    "service-discovery",
+    "api-monetisation",
+    "decentralised",
+    "kind-31402",
+    "bitcoin"
   ],
   "license": "MIT",
   "repository": {

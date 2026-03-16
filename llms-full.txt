@@ -28,7 +28,7 @@ interface BoothConfigLike {
 interface TollBoothAnnounceOptions {
   secretKey: string       // 64-char hex Nostr secret key
   relays: string[]        // wss:// relay URLs
-  url: string             // HTTP endpoint URL
+  urls: string[]          // Public URLs (1–10, tried in order)
   about: string           // Service description
   paymentMethods?: string[] // Override auto-derived methods
   identifier?: string     // Override auto-derived d-tag
@@ -66,7 +66,7 @@ const handle = await announce(
   {
     secretKey: process.env.NOSTR_SECRET_KEY!,
     relays: ['wss://relay.damus.io', 'wss://relay.primal.net'],
-    url: 'https://jokes.trotters.dev',
+    urls: ['https://jokes.trotters.dev'],
     about: 'A joke-telling API behind an L402 paywall',
     topics: ['comedy', 'ai'],
   },
