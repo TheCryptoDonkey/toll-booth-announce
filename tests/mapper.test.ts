@@ -130,7 +130,7 @@ describe('payment method auto-derivation', () => {
   it('user-provided paymentMethods override auto-derived', () => {
     const result = mapBoothConfig(
       { pricing: { '/api': 10 }, xcashu: { mints: ['https://mint.example.com'] } },
-      { secretKey: 'a'.repeat(64), relays: ['wss://r.example.com'], url: 'https://api.example.com', about: 'test', paymentMethods: ['custom-method'] },
+      { secretKey: 'a'.repeat(64), relays: ['wss://r.example.com'], urls: ['https://api.example.com'], about: 'test', paymentMethods: ['custom-method'] },
     )
     expect(result.paymentMethods).toEqual(['custom-method'])
   })
