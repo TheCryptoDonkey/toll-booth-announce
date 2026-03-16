@@ -14,7 +14,7 @@ pnpm test:watch   # vitest (watch mode)
 
 ```
 src/
-  index.ts      — public exports (announce, types)
+  index.ts      — public exports (announce, BoothConfigLike, types)
   announce.ts   — main entry point: maps config then calls 402-announce
   mapper.ts     — BoothConfigLike → AnnounceConfig (pricing extraction, payment method derivation)
   slugify.ts    — service name → URL-safe d-tag identifier
@@ -26,6 +26,10 @@ tests/
   slugify.test.ts
 ```
 
+## Dev setup
+
+Requires `402-announce` as a sibling directory (`file:../402-announce` in package.json). Clone both repos side-by-side before `pnpm install`.
+
 ## Conventions
 
 - British English (colour, behaviour, licence, decentralised)
@@ -36,6 +40,7 @@ tests/
 
 ## Key design decisions
 
+- ESM-only package (`"type": "module"`) — no CJS build
 - `BoothConfigLike` reproduces only the subset of toll-booth types needed, avoiding a direct import of toll-booth internals
 - Payment methods are auto-derived from config (hasBackend → lightning, xcashu → cashu) but can be overridden
 - Pricing extraction handles three formats: flat number, PriceInfo ({sats, usd}), and tiered (Record with default key)
