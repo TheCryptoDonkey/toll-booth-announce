@@ -31,8 +31,10 @@ function fromPriceInfo(info: PriceInfo): { price: number; currency: string } {
  * where TieredPricing = Record<string, number | PriceInfo>
  */
 export interface BoothConfigLike {
-  serviceName?: string
   pricing: Record<string, number | PriceInfo | Record<string, number | PriceInfo>>
+  serviceName?: string
+  hasBackend?: boolean
+  xcashu?: { mints: string[] }
 }
 
 /** Map a toll-booth config + user options to a 402-announce AnnounceConfig. */
@@ -74,6 +76,14 @@ export function mapBoothConfig(
     return { capability, price, currency: 'sats' }
   })
 
+  // Auto-derive payment methods if not explicitly provided
+  let paymentMethods = options.paymentMethods
+  if (!paymentMethods) {
+    paymentMethods = []
+    if (boothConfig.hasBackend) paymentMethods.push('bitcoin-lightning-bolt11')
+    if (boothConfig.xcashu) paymentMethods.push('bitcoin-cashu-xcashu')
+  }
+
   return {
     secretKey: options.secretKey,
     relays: options.relays,
@@ -82,7 +92,7 @@ export function mapBoothConfig(
     url: options.url,
     about: options.about,
     pricing,
-    paymentMethods: options.paymentMethods,
+    paymentMethods,
     ...(options.picture && { picture: options.picture }),
     ...(options.topics && { topics: options.topics }),
     ...(options.version && { version: options.version }),

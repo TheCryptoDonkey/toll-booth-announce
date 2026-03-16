@@ -109,3 +109,46 @@ describe('mapBoothConfig', () => {
     expect(result.paymentMethods).toEqual(['bitcoin-lightning-bolt11'])
   })
 })
+
+describe('payment method auto-derivation', () => {
+  it('includes bitcoin-cashu-xcashu when xcashu is configured', () => {
+    const result = mapBoothConfig(
+      { pricing: { '/api': 10 }, xcashu: { mints: ['https://mint.example.com'] } },
+      { secretKey: 'a'.repeat(64), relays: ['wss://r.example.com'], url: 'https://api.example.com', about: 'test' },
+    )
+    expect(result.paymentMethods).toContain('bitcoin-cashu-xcashu')
+  })
+
+  it('includes bitcoin-lightning-bolt11 when backend is present', () => {
+    const result = mapBoothConfig(
+      { pricing: { '/api': 10 }, hasBackend: true },
+      { secretKey: 'a'.repeat(64), relays: ['wss://r.example.com'], url: 'https://api.example.com', about: 'test' },
+    )
+    expect(result.paymentMethods).toContain('bitcoin-lightning-bolt11')
+  })
+
+  it('user-provided paymentMethods override auto-derived', () => {
+    const result = mapBoothConfig(
+      { pricing: { '/api': 10 }, xcashu: { mints: ['https://mint.example.com'] } },
+      { secretKey: 'a'.repeat(64), relays: ['wss://r.example.com'], url: 'https://api.example.com', about: 'test', paymentMethods: ['custom-method'] },
+    )
+    expect(result.paymentMethods).toEqual(['custom-method'])
+  })
+
+  it('combines Lightning and xcashu when both present', () => {
+    const result = mapBoothConfig(
+      { pricing: { '/api': 10 }, hasBackend: true, xcashu: { mints: ['https://mint.example.com'] } },
+      { secretKey: 'a'.repeat(64), relays: ['wss://r.example.com'], url: 'https://api.example.com', about: 'test' },
+    )
+    expect(result.paymentMethods).toContain('bitcoin-lightning-bolt11')
+    expect(result.paymentMethods).toContain('bitcoin-cashu-xcashu')
+  })
+
+  it('returns empty paymentMethods when no backend or xcashu and none provided', () => {
+    const result = mapBoothConfig(
+      { pricing: { '/api': 10 } },
+      { secretKey: 'a'.repeat(64), relays: ['wss://r.example.com'], url: 'https://api.example.com', about: 'test' },
+    )
+    expect(result.paymentMethods).toEqual([])
+  })
+})

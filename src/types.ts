@@ -11,7 +11,7 @@ export interface TollBoothAnnounceOptions {
   /** Short human-readable description of the service. */
   about: string
   /** Accepted payment method identifiers (e.g. ['bitcoin-lightning-bolt11']). */
-  paymentMethods: string[]
+  paymentMethods?: string[]
   /** Optional identifier override. Defaults to slugified serviceName. */
   identifier?: string
   /** Optional icon URL. */
