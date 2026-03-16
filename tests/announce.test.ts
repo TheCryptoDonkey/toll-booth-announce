@@ -20,7 +20,7 @@ const boothConfig = {
 const options = {
   secretKey: 'a'.repeat(64),
   relays: ['wss://relay.damus.io'],
-  url: 'https://routing.trotters.cc',
+  urls: ['https://routing.trotters.cc'],
   about: 'Production routing engine',
   paymentMethods: ['bitcoin-lightning-bolt11'],
   topics: ['routing', 'maps'],
@@ -34,7 +34,7 @@ describe('announce', () => {
       expect.objectContaining({
         name: 'Valhalla Routing',
         identifier: 'valhalla-routing',
-        url: 'https://routing.trotters.cc',
+        urls: ['https://routing.trotters.cc'],
         about: 'Production routing engine',
         paymentMethods: ['bitcoin-lightning-bolt11'],
         topics: ['routing', 'maps'],

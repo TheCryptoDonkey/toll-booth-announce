@@ -34,7 +34,7 @@
     "url": "git+https://github.com/TheCryptoDonkey/toll-booth-announce.git"
   },
   "dependencies": {
-    "402-announce": "^1.2.0"
+    "402-announce": "file:../402-announce"
   },
   "peerDependencies": {
     "@thecryptodonkey/toll-booth": "^3.0.0"

@@ -5,7 +5,7 @@ import type { TollBoothAnnounceOptions } from '../src/types.js'
 const baseOptions: TollBoothAnnounceOptions = {
   secretKey: 'a'.repeat(64),
   relays: ['wss://relay.example.com'],
-  url: 'https://example.com',
+  urls: ['https://example.com'],
   about: 'Test service',
   paymentMethods: ['bitcoin-lightning-bolt11'],
 }
@@ -100,11 +100,11 @@ describe('mapBoothConfig', () => {
     expect(result.version).toBe('1.0.0')
   })
 
-  it('passes through secretKey, relays, url, about, paymentMethods', () => {
+  it('passes through secretKey, relays, urls, about, paymentMethods', () => {
     const result = mapBoothConfig({ pricing: { '/test': 10 } }, baseOptions)
     expect(result.secretKey).toBe('a'.repeat(64))
     expect(result.relays).toEqual(['wss://relay.example.com'])
-    expect(result.url).toBe('https://example.com')
+    expect(result.urls).toEqual(['https://example.com'])
     expect(result.about).toBe('Test service')
     expect(result.paymentMethods).toEqual(['bitcoin-lightning-bolt11'])
   })
@@ -114,7 +114,7 @@ describe('payment method auto-derivation', () => {
   it('includes bitcoin-cashu-xcashu when xcashu is configured', () => {
     const result = mapBoothConfig(
       { pricing: { '/api': 10 }, xcashu: { mints: ['https://mint.example.com'] } },
-      { secretKey: 'a'.repeat(64), relays: ['wss://r.example.com'], url: 'https://api.example.com', about: 'test' },
+      { secretKey: 'a'.repeat(64), relays: ['wss://r.example.com'], urls: ['https://api.example.com'], about: 'test' },
     )
     expect(result.paymentMethods).toContain('bitcoin-cashu-xcashu')
   })
@@ -122,7 +122,7 @@ describe('payment method auto-derivation', () => {
   it('includes bitcoin-lightning-bolt11 when backend is present', () => {
     const result = mapBoothConfig(
       { pricing: { '/api': 10 }, hasBackend: true },
-      { secretKey: 'a'.repeat(64), relays: ['wss://r.example.com'], url: 'https://api.example.com', about: 'test' },
+      { secretKey: 'a'.repeat(64), relays: ['wss://r.example.com'], urls: ['https://api.example.com'], about: 'test' },
     )
     expect(result.paymentMethods).toContain('bitcoin-lightning-bolt11')
   })
@@ -130,7 +130,7 @@ describe('payment method auto-derivation', () => {
   it('user-provided paymentMethods override auto-derived', () => {
     const result = mapBoothConfig(
       { pricing: { '/api': 10 }, xcashu: { mints: ['https://mint.example.com'] } },
-      { secretKey: 'a'.repeat(64), relays: ['wss://r.example.com'], url: 'https://api.example.com', about: 'test', paymentMethods: ['custom-method'] },
+      { secretKey: 'a'.repeat(64), relays: ['wss://r.example.com'], urls: ['https://api.example.com'], about: 'test', paymentMethods: ['custom-method'] },
     )
     expect(result.paymentMethods).toEqual(['custom-method'])
   })
@@ -138,7 +138,7 @@ describe('payment method auto-derivation', () => {
   it('combines Lightning and xcashu when both present', () => {
     const result = mapBoothConfig(
       { pricing: { '/api': 10 }, hasBackend: true, xcashu: { mints: ['https://mint.example.com'] } },
-      { secretKey: 'a'.repeat(64), relays: ['wss://r.example.com'], url: 'https://api.example.com', about: 'test' },
+      { secretKey: 'a'.repeat(64), relays: ['wss://r.example.com'], urls: ['https://api.example.com'], about: 'test' },
     )
     expect(result.paymentMethods).toContain('bitcoin-lightning-bolt11')
     expect(result.paymentMethods).toContain('bitcoin-cashu-xcashu')
@@ -147,7 +147,7 @@ describe('payment method auto-derivation', () => {
   it('returns empty paymentMethods when no backend or xcashu and none provided', () => {
     const result = mapBoothConfig(
       { pricing: { '/api': 10 } },
-      { secretKey: 'a'.repeat(64), relays: ['wss://r.example.com'], url: 'https://api.example.com', about: 'test' },
+      { secretKey: 'a'.repeat(64), relays: ['wss://r.example.com'], urls: ['https://api.example.com'], about: 'test' },
     )
     expect(result.paymentMethods).toEqual([])
   })

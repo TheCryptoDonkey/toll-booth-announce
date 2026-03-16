@@ -6,8 +6,8 @@ export interface TollBoothAnnounceOptions {
   secretKey: string
   /** Nostr relay URLs to publish to (wss:// or ws://). */
   relays: string[]
-  /** Public URL where the toll-booth service is accessible. */
-  url: string
+  /** Public URLs where the toll-booth service is accessible. */
+  urls: string[]
   /** Short human-readable description of the service. */
   about: string
   /** Accepted payment method identifiers (e.g. ['bitcoin-lightning-bolt11']). */

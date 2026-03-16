@@ -89,7 +89,7 @@ export function mapBoothConfig(
     relays: options.relays,
     identifier,
     name,
-    url: options.url,
+    urls: options.urls,
     about: options.about,
     pricing,
     paymentMethods,
