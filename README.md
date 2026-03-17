@@ -36,7 +36,7 @@ const announcement = await announce(config, {
   relays: ['wss://relay.damus.io', 'wss://relay.primal.net'],
   urls: ['https://jokes.trotters.dev'],
   about: 'Lightning-paid joke API — cracker, standard, and premium jokes',
-  paymentMethods: ['bitcoin-lightning-bolt11'],
+  paymentMethods: [['l402', 'lightning']],
   topics: ['jokes', 'humour', 'bitcoin', 'lightning'],
 })
 
@@ -57,7 +57,7 @@ const announcement = await announce(config, {
     'http://jokesxyz...onion',             // Tor hidden service
   ],
   about: 'Lightning-paid joke API — cracker, standard, and premium jokes',
-  paymentMethods: ['bitcoin-lightning-bolt11'],
+  paymentMethods: [['l402', 'lightning']],
   topics: ['jokes', 'humour', 'bitcoin', 'lightning'],
 })
 ```

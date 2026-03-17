@@ -22,7 +22,7 @@ const options = {
   relays: ['wss://relay.damus.io'],
   urls: ['https://routing.trotters.cc'],
   about: 'Production routing engine',
-  paymentMethods: ['bitcoin-lightning-bolt11'],
+  paymentMethods: [['l402', 'lightning']],
   topics: ['routing', 'maps'],
 }
 
@@ -36,7 +36,7 @@ describe('announce', () => {
         identifier: 'valhalla-routing',
         urls: ['https://routing.trotters.cc'],
         about: 'Production routing engine',
-        paymentMethods: ['bitcoin-lightning-bolt11'],
+        paymentMethods: [['l402', 'lightning']],
         topics: ['routing', 'maps'],
         pricing: [
           { capability: '/route', price: 2, currency: 'sats' },

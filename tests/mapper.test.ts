@@ -7,7 +7,7 @@ const baseOptions: TollBoothAnnounceOptions = {
   relays: ['wss://relay.example.com'],
   urls: ['https://example.com'],
   about: 'Test service',
-  paymentMethods: ['bitcoin-lightning-bolt11'],
+  paymentMethods: [['l402', 'lightning']],
 }
 
 describe('mapBoothConfig', () => {
@@ -42,12 +42,13 @@ describe('mapBoothConfig', () => {
     ])
   })
 
-  it('maps PriceInfo pricing (dual-currency object with sats)', () => {
+  it('maps PriceInfo pricing (dual-currency object) emitting both sats and usd', () => {
     const result = mapBoothConfig({
       pricing: { '/route': { sats: 2, usd: 1 } },
     }, baseOptions)
     expect(result.pricing).toEqual([
       { capability: '/route', price: 2, currency: 'sats' },
+      { capability: '/route', price: 1, currency: 'usd' },
     ])
   })
 
@@ -78,12 +79,13 @@ describe('mapBoothConfig', () => {
     ])
   })
 
-  it('maps tiered pricing with PriceInfo values using default tier sats', () => {
+  it('maps tiered pricing with PriceInfo values using default tier, emitting both currencies', () => {
     const result = mapBoothConfig({
       pricing: { '/api/joke': { default: { sats: 5, usd: 2 }, premium: { sats: 42, usd: 10 } } },
     }, baseOptions)
     expect(result.pricing).toEqual([
       { capability: '/api/joke', price: 5, currency: 'sats' },
+      { capability: '/api/joke', price: 2, currency: 'usd' },
     ])
   })
 
@@ -106,42 +108,42 @@ describe('mapBoothConfig', () => {
     expect(result.relays).toEqual(['wss://relay.example.com'])
     expect(result.urls).toEqual(['https://example.com'])
     expect(result.about).toBe('Test service')
-    expect(result.paymentMethods).toEqual(['bitcoin-lightning-bolt11'])
+    expect(result.paymentMethods).toEqual([['l402', 'lightning']])
   })
 })
 
 describe('payment method auto-derivation', () => {
-  it('includes bitcoin-cashu-xcashu when xcashu is configured', () => {
+  it('includes xcashu when xcashu is configured', () => {
     const result = mapBoothConfig(
       { pricing: { '/api': 10 }, xcashu: { mints: ['https://mint.example.com'] } },
       { secretKey: 'a'.repeat(64), relays: ['wss://r.example.com'], urls: ['https://api.example.com'], about: 'test' },
     )
-    expect(result.paymentMethods).toContain('bitcoin-cashu-xcashu')
+    expect(result.paymentMethods).toContainEqual(['xcashu'])
   })
 
-  it('includes bitcoin-lightning-bolt11 when backend is present', () => {
+  it('includes l402 lightning when backend is present', () => {
     const result = mapBoothConfig(
       { pricing: { '/api': 10 }, hasBackend: true },
       { secretKey: 'a'.repeat(64), relays: ['wss://r.example.com'], urls: ['https://api.example.com'], about: 'test' },
     )
-    expect(result.paymentMethods).toContain('bitcoin-lightning-bolt11')
+    expect(result.paymentMethods).toContainEqual(['l402', 'lightning'])
   })
 
   it('user-provided paymentMethods override auto-derived', () => {
     const result = mapBoothConfig(
       { pricing: { '/api': 10 }, xcashu: { mints: ['https://mint.example.com'] } },
-      { secretKey: 'a'.repeat(64), relays: ['wss://r.example.com'], urls: ['https://api.example.com'], about: 'test', paymentMethods: ['custom-method'] },
+      { secretKey: 'a'.repeat(64), relays: ['wss://r.example.com'], urls: ['https://api.example.com'], about: 'test', paymentMethods: [['cashu']] },
     )
-    expect(result.paymentMethods).toEqual(['custom-method'])
+    expect(result.paymentMethods).toEqual([['cashu']])
   })
 
-  it('combines Lightning and xcashu when both present', () => {
+  it('combines L402 and xcashu when both present', () => {
     const result = mapBoothConfig(
       { pricing: { '/api': 10 }, hasBackend: true, xcashu: { mints: ['https://mint.example.com'] } },
       { secretKey: 'a'.repeat(64), relays: ['wss://r.example.com'], urls: ['https://api.example.com'], about: 'test' },
     )
-    expect(result.paymentMethods).toContain('bitcoin-lightning-bolt11')
-    expect(result.paymentMethods).toContain('bitcoin-cashu-xcashu')
+    expect(result.paymentMethods).toContainEqual(['l402', 'lightning'])
+    expect(result.paymentMethods).toContainEqual(['xcashu'])
   })
 
   it('returns empty paymentMethods when no backend or xcashu and none provided', () => {

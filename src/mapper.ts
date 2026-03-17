@@ -16,13 +16,6 @@ function isPriceInfo(value: unknown): value is PriceInfo {
   return typeof value === 'object' && value !== null && ('sats' in value || 'usd' in value)
 }
 
-/** Extract price and currency from a PriceInfo object. Prefers sats. */
-function fromPriceInfo(info: PriceInfo): { price: number; currency: string } {
-  if (info.sats !== undefined) return { price: info.sats, currency: 'sats' }
-  if (info.usd !== undefined) return { price: info.usd, currency: 'usd' }
-  return { price: 0, currency: 'sats' }
-}
-
 /**
  * Subset of BoothConfig fields relevant for announcement.
  * Kept minimal to avoid tight coupling to toll-booth internals.
@@ -45,16 +38,19 @@ export function mapBoothConfig(
   const name = boothConfig.serviceName ?? 'toll-booth'
   const identifier = options.identifier ?? slugify(name)
 
-  const pricing: PricingDef[] = Object.entries(boothConfig.pricing).map(([capability, value]) => {
+  const pricing: PricingDef[] = Object.entries(boothConfig.pricing).flatMap(([capability, value]) => {
     // Case 1: flat number price
     if (typeof value === 'number') {
-      return { capability, price: value, currency: 'sats' }
+      return [{ capability, price: value, currency: 'sats' }]
     }
 
-    // Case 2: PriceInfo ({ sats?: number, usd?: number })
+    // Case 2: PriceInfo ({ sats?: number, usd?: number }) — emit both currencies when available
     if (isPriceInfo(value)) {
-      const { price, currency } = fromPriceInfo(value)
-      return { capability, price, currency }
+      const entries: PricingDef[] = []
+      if (value.sats !== undefined) entries.push({ capability, price: value.sats, currency: 'sats' })
+      if (value.usd !== undefined) entries.push({ capability, price: value.usd, currency: 'usd' })
+      if (entries.length === 0) entries.push({ capability, price: 0, currency: 'sats' })
+      return entries
     }
 
     // Case 3: TieredPricing (Record<string, number | PriceInfo>)
@@ -62,9 +58,12 @@ export function mapBoothConfig(
     const tiers = value as Record<string, number | PriceInfo>
     const defaultTier = tiers.default
     if (defaultTier !== undefined) {
-      if (typeof defaultTier === 'number') return { capability, price: defaultTier, currency: 'sats' }
-      const { price, currency } = fromPriceInfo(defaultTier)
-      return { capability, price, currency }
+      if (typeof defaultTier === 'number') return [{ capability, price: defaultTier, currency: 'sats' }]
+      const entries: PricingDef[] = []
+      if (defaultTier.sats !== undefined) entries.push({ capability, price: defaultTier.sats, currency: 'sats' })
+      if (defaultTier.usd !== undefined) entries.push({ capability, price: defaultTier.usd, currency: 'usd' })
+      if (entries.length === 0) entries.push({ capability, price: 0, currency: 'sats' })
+      return entries
     }
 
     // No default tier — find lowest sats price among numeric tiers
@@ -73,15 +72,15 @@ export function mapBoothConfig(
       .filter((v): v is number => v !== undefined)
 
     const price = numericValues.length > 0 ? Math.min(...numericValues) : 0
-    return { capability, price, currency: 'sats' }
+    return [{ capability, price, currency: 'sats' }]
   })
 
   // Auto-derive payment methods if not explicitly provided
   let paymentMethods = options.paymentMethods
   if (!paymentMethods) {
     paymentMethods = []
-    if (boothConfig.hasBackend) paymentMethods.push('bitcoin-lightning-bolt11')
-    if (boothConfig.xcashu) paymentMethods.push('bitcoin-cashu-xcashu')
+    if (boothConfig.hasBackend) paymentMethods.push(['l402', 'lightning'])
+    if (boothConfig.xcashu) paymentMethods.push(['xcashu'])
   }
 
   return {

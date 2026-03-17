@@ -30,7 +30,7 @@ interface TollBoothAnnounceOptions {
   relays: string[]        // wss:// relay URLs
   urls: string[]          // Public URLs (1–10, tried in order)
   about: string           // Service description
-  paymentMethods?: string[] // Override auto-derived methods
+  paymentMethods?: string[][] // Override auto-derived methods
   identifier?: string     // Override auto-derived d-tag
   picture?: string        // Icon URL
   topics?: string[]       // Filtering tags
@@ -42,14 +42,14 @@ interface TollBoothAnnounceOptions {
 toll-booth-announce extracts pricing from three formats:
 
 1. Flat number: { '/api': 10 } → { capability: '/api', price: 10, currency: 'sats' }
-2. PriceInfo: { '/api': { sats: 10, usd: 1 } } → prefers sats
+2. PriceInfo: { '/api': { sats: 10, usd: 1 } } → emits both sats and usd price tags
 3. Tiered: { '/api': { default: 10, premium: 50 } } → uses default tier
 
 ## Payment Method Auto-Derivation
 
 When paymentMethods is not provided:
-- hasBackend: true → includes 'bitcoin-lightning-bolt11'
-- xcashu configured → includes 'bitcoin-cashu-xcashu'
+- hasBackend: true → includes ['l402', 'lightning']
+- xcashu configured → includes ['xcashu']
 - User-provided paymentMethods override all auto-derivation
 
 ## Example
@@ -72,7 +72,7 @@ const handle = await announce(
   },
 )
 
-// Auto-derived: paymentMethods = ['bitcoin-lightning-bolt11', 'bitcoin-cashu-xcashu']
+// Auto-derived: paymentMethods = [['l402', 'lightning'], ['xcashu']]
 console.log('Announced:', handle.eventId)
 handle.close()
 

@@ -10,8 +10,13 @@ export interface TollBoothAnnounceOptions {
   urls: string[]
   /** Short human-readable description of the service. */
   about: string
-  /** Accepted payment method identifiers (e.g. ['bitcoin-lightning-bolt11']). */
-  paymentMethods?: string[]
+  /**
+   * Payment method identifiers. Each entry is an array of tag elements:
+   * - L402: ['l402', 'lightning']
+   * - xCashu: ['xcashu']
+   * - x402: ['x402', 'base', 'usdc', '<receiver-address>']
+   */
+  paymentMethods?: string[][]
   /** Optional identifier override. Defaults to slugified serviceName. */
   identifier?: string
   /** Optional icon URL. */
