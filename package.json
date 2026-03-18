@@ -39,7 +39,7 @@
     "url": "git+https://github.com/forgesworn/toll-booth-announce.git"
   },
   "dependencies": {
-    "402-announce": "file:../402-announce"
+    "402-announce": "^1.11.0"
   },
   "peerDependencies": {
     "@forgesworn/toll-booth": "^3.0.0"
