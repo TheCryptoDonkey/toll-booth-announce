@@ -1,5 +1,7 @@
 # toll-booth-announce
 
+**Nostr:** [`npub1mgvlrnf5hm9yf0n5mf9nqmvarhvxkc6remu5ec3vf8r0txqkuk7su0e7q2`](https://njump.me/npub1mgvlrnf5hm9yf0n5mf9nqmvarhvxkc6remu5ec3vf8r0txqkuk7su0e7q2)
+
 Announce your [toll-booth](https://github.com/forgesworn/toll-booth) service on Nostr for decentralised paid API discovery.
 
 Publishes a [kind 31402](https://github.com/forgesworn/402-announce) event so AI agents and clients can find your API without a centralised registry.
