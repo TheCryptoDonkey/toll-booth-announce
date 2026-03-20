@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/forgesworn/toll-booth-announce/compare/v1.2.0...v1.2.1) (2026-03-20)
+
+
+### Bug Fixes
+
+* correct copyright to TheCryptoDonkey ([742a575](https://github.com/forgesworn/toll-booth-announce/commit/742a5750ac1ac8cf8d359f819656784317b8807e))
+
 # [1.2.0](https://github.com/forgesworn/toll-booth-announce/compare/v1.1.0...v1.2.0) (2026-03-18)
 
 
