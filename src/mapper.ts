@@ -28,6 +28,7 @@ export interface BoothConfigLike {
   serviceName?: string
   hasBackend?: boolean
   xcashu?: { mints: string[] }
+  ietfPayment?: { realm: string }
 }
 
 /** Map a toll-booth config + user options to a 402-announce AnnounceConfig. */
@@ -80,6 +81,7 @@ export function mapBoothConfig(
   if (!paymentMethods) {
     paymentMethods = []
     if (boothConfig.hasBackend) paymentMethods.push(['l402', 'lightning'])
+    if (boothConfig.ietfPayment) paymentMethods.push(['payment', 'lightning'])
     if (boothConfig.xcashu) paymentMethods.push(['xcashu'])
   }
 
