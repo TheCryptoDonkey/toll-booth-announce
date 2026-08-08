@@ -1,3 +1,10 @@
+## [1.3.3](https://github.com/forgesworn/toll-booth-announce/compare/v1.3.1...v1.3.3) (2026-08-08)
+
+### Bug Fixes
+
+- Map `ietfPayment` to the valid `['l402', 'lightning']` payment rail. Previously the mapper emitted a `payment` rail absent from the 402-announce allowlist, so any booth config with `ietfPayment` threw at publish time.
+- Throw a clear bridge-layer error naming the relevant config fields when no payment methods can be derived and `paymentMethods` is omitted, instead of emitting an empty list that 402-announce rejects.
+
 ## [1.3.1](https://github.com/forgesworn/toll-booth-announce/compare/v1.3.0...v1.3.1) (2026-04-12)
 
 
