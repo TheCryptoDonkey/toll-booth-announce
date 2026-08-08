@@ -14,6 +14,14 @@
 
 # [1.3.0](https://github.com/forgesworn/toll-booth-announce/compare/v1.2.1...v1.3.0) (2026-03-24)
 
+## 1.3.4 (2026-08-08)
+
+### Bug Fixes
+
+- map ietfPayment to a valid payment rail and fail clearly on empty methods
+
+
+
 ## 1.3.2 (2026-04-12)
 
 ### Bug Fixes
