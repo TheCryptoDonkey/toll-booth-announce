@@ -146,11 +146,34 @@ describe('payment method auto-derivation', () => {
     expect(result.paymentMethods).toContainEqual(['xcashu'])
   })
 
-  it('returns empty paymentMethods when no backend or xcashu and none provided', () => {
+  it('includes l402 lightning when ietfPayment is configured (IETF Payment is Lightning-backed)', () => {
     const result = mapBoothConfig(
-      { pricing: { '/api': 10 } },
+      { pricing: { '/api': 10 }, ietfPayment: { realm: 'api.example.com' } },
       { secretKey: 'a'.repeat(64), relays: ['wss://r.example.com'], urls: ['https://api.example.com'], about: 'test' },
     )
-    expect(result.paymentMethods).toEqual([])
+    expect(result.paymentMethods).toEqual([['l402', 'lightning']])
+  })
+
+  it('does not duplicate l402 when both hasBackend and ietfPayment are set', () => {
+    const result = mapBoothConfig(
+      { pricing: { '/api': 10 }, hasBackend: true, ietfPayment: { realm: 'api.example.com' } },
+      { secretKey: 'a'.repeat(64), relays: ['wss://r.example.com'], urls: ['https://api.example.com'], about: 'test' },
+    )
+    expect(result.paymentMethods).toEqual([['l402', 'lightning']])
+  })
+
+  it('throws a clear error when no payment methods can be derived and none provided', () => {
+    expect(() => mapBoothConfig(
+      { pricing: { '/api': 10 } },
+      { secretKey: 'a'.repeat(64), relays: ['wss://r.example.com'], urls: ['https://api.example.com'], about: 'test' },
+    )).toThrow(/could not derive any payment methods.*hasBackend.*ietfPayment.*xcashu.*paymentMethods/s)
+  })
+
+  it('does not throw when paymentMethods are provided explicitly and nothing is derivable', () => {
+    const result = mapBoothConfig(
+      { pricing: { '/api': 10 } },
+      baseOptions,
+    )
+    expect(result.paymentMethods).toEqual([['l402', 'lightning']])
   })
 })

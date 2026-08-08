@@ -76,13 +76,21 @@ export function mapBoothConfig(
     return [{ capability, price, currency: 'sats' }]
   })
 
-  // Auto-derive payment methods if not explicitly provided
+  // Auto-derive payment methods if not explicitly provided.
+  // 402-announce validates rails against {l402, x402, cashu, xcashu}, so the
+  // Lightning-backed IETF Payment rail is announced via the 'l402' rail.
   let paymentMethods = options.paymentMethods
   if (!paymentMethods) {
     paymentMethods = []
-    if (boothConfig.hasBackend) paymentMethods.push(['l402', 'lightning'])
-    if (boothConfig.ietfPayment) paymentMethods.push(['payment', 'lightning'])
+    if (boothConfig.hasBackend || boothConfig.ietfPayment) paymentMethods.push(['l402', 'lightning'])
     if (boothConfig.xcashu) paymentMethods.push(['xcashu'])
+    if (paymentMethods.length === 0) {
+      throw new Error(
+        'toll-booth-announce: could not derive any payment methods from the booth config. ' +
+        'Set at least one of `hasBackend` (L402/Lightning), `ietfPayment` (IETF Payment over Lightning), ' +
+        'or `xcashu` (Cashu mints) in the booth config, or pass `paymentMethods` explicitly in the announce options.',
+      )
+    }
   }
 
   return {
