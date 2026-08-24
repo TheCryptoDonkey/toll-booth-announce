@@ -46,7 +46,7 @@
     "402-announce": "^2.0.0"
   },
   "peerDependencies": {
-    "@forgesworn/toll-booth": "^4.0.0"
+    "@forgesworn/toll-booth": "^6.1.2"
   },
   "peerDependenciesMeta": {
     "@forgesworn/toll-booth": {
@@ -54,7 +54,7 @@
     }
   },
   "devDependencies": {
-    "@forgesworn/toll-booth": "^4.0.0",
+    "@forgesworn/toll-booth": "^6.1.2",
     "@types/node": "^25.6.0",
     "typescript": "^6.0.2",
     "vite": "^8.0.8",
