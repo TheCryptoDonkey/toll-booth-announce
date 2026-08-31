@@ -10,7 +10,7 @@ importers:
     dependencies:
       402-announce:
         specifier: ^2.0.0
-        version: 2.1.1(typescript@6.0.3)
+        version: 2.2.0(typescript@6.0.3)
     devDependencies:
       '@forgesworn/toll-booth':
         specifier: ^4.0.0
@@ -30,8 +30,8 @@ importers:
 
 packages:
 
-  402-announce@2.1.1:
-    resolution: {integrity: sha512-V5GbVBLP58/qDm8TgjQ8f6jFaf+4WA10nHKN39r4rvmmTALnFEu1iNNRGWNPSCD50dtkmP4GqMe7w4QrPpe7LA==}
+  402-announce@2.2.0:
+    resolution: {integrity: sha512-ejpHZjVZBW/ERpE5bVlU615jh4uPNGfxAgcgUj+p7Bs1+Utc1M9NYDu3OcPv0I2fT9kVZ+gWU6MBzfIzpJm2kg==}
     engines: {node: '>=18'}
 
   '@babel/helper-string-parser@7.29.7':
@@ -561,8 +561,8 @@ packages:
   nostr-core@0.8.0:
     resolution: {integrity: sha512-B0WoRYd3qo5i3AFiXB+ngqpMjvBgvRHlpbXpuUxpYeeP+3rKgPZaWYcDnwbKfI05fTHOcwPQJUJlT5LRonSMbw==}
 
-  nostr-tools@2.23.3:
-    resolution: {integrity: sha512-AALyt9k8xPdF4UV2mlLJ2mgCn4kpTB0DZ8t2r6wjdUh6anfx2cTVBsHUlo9U0EY/cKC5wcNyiMAmRJV5OVEalA==}
+  nostr-tools@2.25.0:
+    resolution: {integrity: sha512-AFdf2jv7F5CtLTwZ0JlQS+Ms+Mo7a8w3pASikHEA2dr4M2Mk5eCDZGaOYfDXlauVzx5b7c5H0F6WQsEFiKlW3Q==}
     peerDependencies:
       typescript: '>=5.0.0'
     peerDependenciesMeta:
@@ -857,9 +857,9 @@ packages:
 
 snapshots:
 
-  402-announce@2.1.1(typescript@6.0.3):
+  402-announce@2.2.0(typescript@6.0.3):
     dependencies:
-      nostr-tools: 2.23.3(typescript@6.0.3)
+      nostr-tools: 2.25.0(typescript@6.0.3)
     transitivePeerDependencies:
       - typescript
 
@@ -1312,7 +1312,7 @@ snapshots:
     transitivePeerDependencies:
       - vue
 
-  nostr-tools@2.23.3(typescript@6.0.3):
+  nostr-tools@2.25.0(typescript@6.0.3):
     dependencies:
       '@noble/ciphers': 2.1.1
       '@noble/curves': 2.0.1
